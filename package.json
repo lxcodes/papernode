@@ -1,0 +1,36 @@
+{
+  "author": "Brett Langdon <brett@blangdon.com> (www.blangdon.com)",
+  "contributors":[
+    {
+        "name": "Colin Higgins",
+        "email": "develoeprspike@gmail.com"
+    },
+    {
+        "name": "Alex Ambrose",
+        "email": "alexander.r.ambrose@gmail.com"
+    },
+    {
+        "name": "Brett Langdon",
+        "email": "brett@blangdon.com"
+    }
+  ],
+  "name": "thoughts",
+  "version": "0.0.1",
+  "homepage": "github.com/brettlangdon/thoughts",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/brettlangdon/thoughts.git"
+  },
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha --spec reporter"
+  },
+  "dependencies": {
+    "mocha": "*",
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
