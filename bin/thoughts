@@ -1,0 +1,198 @@
+#!/usr/bin/env node
+
+var colors = require('colors');
+var fs = require('fs');
+var mkdirp = require('mkdirp');
+var readline = require('readline');
+var rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+}); 
+
+var argv = require('optimist').argv;
+if( argv._.length === 0 ){
+    usage();
+    process.exit(1);
+}
+
+
+var command = argv._.shift();
+switch( command.toLowerCase() ){
+        case 'init':
+             init(argv)
+             break;
+        case 'setup':
+             setup(argv);
+             break;
+        case 'run':
+             run(argv);
+             break;
+        case 'api':
+             api(argv);
+             break;
+        default:
+             usage();
+             break;
+}
+
+
+
+
+
+function init( argv ){
+         if( argv.help ){
+             initHelp();
+             process.exit();
+         }
+        
+
+         console.log( 'Initializing Project'.grey );
+
+         var outputDir = "./";
+         if( argv._.length > 0 ){
+             outputDir = argv._[0];
+         }
+         
+         console.log( ('Using Project Directory: ' + outputDir).yellow );
+         if( !fs.existsSync(outputDir) ){
+             console.log( (outputDir + ' Does Not Exist, Attempting to Create').red);
+             try{
+                          if( !mkdirp.sync(outputDir) ){
+                              console.error( ('Unable to Create Project Directory: ' + outputDir).red );
+                              process.exit(1);
+                          }else{
+                              console.log( ('Created Directory: ' + outputDir).green );
+                          }
+             } catch( e ){
+               console.error( ('Could Not Create Directory: ' + outputDir).red );
+               console.error( e.toString().red );
+               process.exit(1);
+             }
+
+             createProject();
+         }else {
+               console.log( ('Directory: ' + outputDir + ' Already Exists').yellow );
+               rl.question( 'Use Anyways? [y/n]: ', answer);
+         }
+
+         function answer(ans){
+                  switch(ans[0].toLowerCase()){
+                        case 'y':
+                             createProject();
+                             break;
+                        case 'n':
+                             process.exit();
+                             break;
+                        default:
+                             console.error( 'Must Answer "y" or "n"' );
+                             rl.question( 'Use Anyways? [y/n]: ', answer );
+                             break;
+                  }
+         }
+
+
+         function createProject(){
+                  //create required directories/files
+
+                  console.log( ('Project Initialized Successfully').green );
+
+                  //we need to configure the project
+                  setup(argv);
+         }
+}
+
+function initHelp(){
+         console.log( 'Init Help'.grey );
+         console.log( 'Usage:'.yellow );
+         console.log( '\tthoughts init <project directory>' );
+         console.log( 'Options:'.yellow );
+         console.log( '\t--help\t- display this text' );
+         console.log( 'Example:'.yellow );
+         console.log( '\tthoughts init' );
+         console.log( '\tthoughts init /my/project/dir' );
+}
+
+function setup( argv ){
+         if( argv.help ){
+             setupHelp();
+             process.exit();
+         }
+         
+         console.log( 'Configuring Project'.grey );
+
+         var projectDir = './';
+         if( argv._.length > 0 ){
+             projectDir = argv._[0];
+         }
+
+         console.log( ('Using Project Directory: ' + projectDir).yellow );
+         if( !fs.existsSync(projectDir) ){
+             console.error('Project Directory Does Not Exist'.red);
+             process.exit(1);
+         }
+
+         //validate directory for project
+
+         process.exit();
+}
+
+function setupHelp(){
+         console.log( 'Setup Help'.grey );
+         console.log( 'Usage:'.yellow );
+         console.log( '\tthoughts setup <project directory>' );
+         console.log( 'Options:'.yellow );
+         console.log( '\t--help\t- display this text' );
+         console.log( 'Example:'.yellow );
+         console.log( '\tthoughts setup' );
+         console.log( '\thtoughts setup /my/project/dir');
+}
+
+function run( argv ){
+         if( argv.help ){
+             runHelp();
+             process.exit();
+         }
+
+         process.exit();
+}
+
+function runHelp(){
+         console.log( 'Run Help'.grey );
+         console.log( 'Usage:'.yellow );
+         console.log( '\thtoughts run <project directory>' );
+         console.log( 'Options:'.yellow );
+         console.log( '\t--help\t- display this text' );
+         console.log( '\t--daemon\t- run project as a daemon' );
+         console.log( 'Example:'.yellow );
+         console.log( '\tthoughts run' );
+         console.log( '\tthoughts run /my/project/dir' );
+}
+
+
+function api(argv){
+         if( argv.help ){
+             apiHelp();
+             process.exit();
+         }
+
+         process.exit();
+}
+
+function apiHelp(){
+         console.log( 'Api Help'.grey );
+         console.log( 'Usage:'.yellow );
+         console.log( 'Options:'.yellow );
+         console.log( 'Example:'.yellow );
+}
+
+function usage(){
+         console.log( 'Thoughts'.grey );
+         console.log( 'Usage:'.yellow );
+         console.log( '\tthoughts <cmd> <options>' );
+         console.log( 'Commands:'.yellow );
+         console.log( '\tinit\t- initialize new project' );
+         console.log( '\tsetup\t- configure/reconfigure project' );
+         console.log( '\tapi\t- query server api' );
+         console.log( '\trun\t- start the server' );
+         process.exit();
+}
