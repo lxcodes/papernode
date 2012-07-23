@@ -104,12 +104,12 @@ function init( argv ){
 function initHelp(){
          console.log( 'Init Help'.grey );
          console.log( 'Usage:'.yellow );
-         console.log( '\tthoughts init <project directory>' );
+         console.log( '\tpapernode init <project directory>' );
          console.log( 'Options:'.yellow );
          console.log( '\t--help\t- display this text' );
          console.log( 'Example:'.yellow );
-         console.log( '\tthoughts init' );
-         console.log( '\tthoughts init /my/project/dir' );
+         console.log( '\tpapernode init' );
+         console.log( '\tpapernode init /my/project/dir' );
 }
 
 function setup( argv ){
@@ -139,12 +139,12 @@ function setup( argv ){
 function setupHelp(){
          console.log( 'Setup Help'.grey );
          console.log( 'Usage:'.yellow );
-         console.log( '\tthoughts setup <project directory>' );
+         console.log( '\tpapernode setup <project directory>' );
          console.log( 'Options:'.yellow );
          console.log( '\t--help\t- display this text' );
          console.log( 'Example:'.yellow );
-         console.log( '\tthoughts setup' );
-         console.log( '\thtoughts setup /my/project/dir');
+         console.log( '\tpapernode setup' );
+         console.log( '\tpapernode setup /my/project/dir');
 }
 
 function run( argv ){
@@ -159,13 +159,13 @@ function run( argv ){
 function runHelp(){
          console.log( 'Run Help'.grey );
          console.log( 'Usage:'.yellow );
-         console.log( '\thtoughts run <project directory>' );
+         console.log( '\tpapernode run <project directory>' );
          console.log( 'Options:'.yellow );
          console.log( '\t--help\t- display this text' );
          console.log( '\t--daemon\t- run project as a daemon' );
          console.log( 'Example:'.yellow );
-         console.log( '\tthoughts run' );
-         console.log( '\tthoughts run /my/project/dir' );
+         console.log( '\tpapernode run' );
+         console.log( '\tpapernode run /my/project/dir' );
 }
 
 
@@ -186,9 +186,9 @@ function apiHelp(){
 }
 
 function usage(){
-         console.log( 'Thoughts'.grey );
+         console.log( 'Papernode'.grey );
          console.log( 'Usage:'.yellow );
-         console.log( '\tthoughts <cmd> <options>' );
+         console.log( '\tpapernode <cmd> <options>' );
          console.log( 'Commands:'.yellow );
          console.log( '\tinit\t- initialize new project' );
          console.log( '\tsetup\t- configure/reconfigure project' );
