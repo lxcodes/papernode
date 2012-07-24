@@ -91,15 +91,17 @@ function init( argv ){
          }
 
 
-         function createProject(){
-                  //create required directories/files
 
-                  console.log( ('Project Initialized Successfully').green );
-
-                  //we need to configure the project
-                  setup(argv);
-         }
 }
+
+function createProject(){
+    //create required directories/files
+    console.log( ('Project Initialized Successfully').green );
+
+    //we need to configure the project
+    setup(argv);
+}
+
 
 function initHelp(){
          console.log( 'Init Help'.grey );
