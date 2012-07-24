@@ -14,12 +14,12 @@
         "email": "brett@blangdon.com"
     }
   ],
-  "name": "thoughts",
+  "name": "papernode",
   "version": "0.0.1",
-  "homepage": "github.com/brettlangdon/thoughts",
+  "homepage": "github.com/brettlangdon/papernode",
   "repository": {
     "type": "git",
-    "url": "git://github.com/brettlangdon/thoughts.git"
+    "url": "git://github.com/brettlangdon/papernode.git"
   },
   "main": "lib/index.js",
   "scripts": {
@@ -27,6 +27,9 @@
   },
   "dependencies": {
     "mocha": "*",
+    "optimist": ">=0.3.4",
+    "mkdirp": ">=0.3.3",
+    "colors": ">=0.6.0"
   },
   "devDependencies": {},
   "optionalDependencies": {},
