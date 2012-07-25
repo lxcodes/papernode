@@ -15,9 +15,9 @@ The API for PaperNode is also modular allowing you to turn off and on any featur
 ##Interfaces
 Interfaces are how you allow users to interact with your information.
 By default PaperNode provides three interfaces:
-# CLI: A simple CLI interface to aid in configuring your application from a terminal.
-# Web: A Web interface that allows users to browse your web site.
-# Admin: A Web based admin interface useful for adding/editing content and configuring your application.
+* CLI: A simple CLI interface to aid in configuring your application from a terminal.
+* Web: A Web interface that allows users to browse your web site.
+* Admin: A Web based admin interface useful for adding/editing content and configuring your application.
 
 ##Installation
 ```
