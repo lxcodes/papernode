@@ -155,7 +155,30 @@ function run( argv ){
              process.exit();
          }
 
-         process.exit();
+	 var papernode = null;
+	 try{
+		papernode = require('papernode');
+	 }catch(e){
+		console.error( 'Cannot Load Module "papernode"'.red );
+		process.exit(1);
+	 }
+
+	 if( papernode === null ){
+	     console.error( 'Cannot Load MOdule "papernode"'.red );
+	     process.exit(1);
+	 }
+
+	 var port = (argv.port)?parseInt(argv.port):8080;
+	 var projectDir = './';
+	 if( argv._[0] ){
+	     projectDir = argv._[0];
+	 }
+	 var server = papernode.createServer( {
+	     port: port,
+	     dir: projectDir
+	 } );
+
+	 console.dir(server);
 }
 
 function runHelp(){
@@ -163,8 +186,8 @@ function runHelp(){
          console.log( 'Usage:'.yellow );
          console.log( '\tpapernode run <project directory>' );
          console.log( 'Options:'.yellow );
-         console.log( '\t--help\t- display this text' );
-         console.log( '\t--daemon\t- run project as a daemon' );
+         console.log( '\t--help\t\t- display this text' );
+	 console.log( '\t--port=8080\t- port number to listen on (default:8080)' );
          console.log( 'Example:'.yellow );
          console.log( '\tpapernode run' );
          console.log( '\tpapernode run /my/project/dir' );
