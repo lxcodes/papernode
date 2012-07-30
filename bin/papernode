@@ -159,7 +159,10 @@ function setup( argv ){
          var config = {
              port: 8080,
              interfaces:[],
-             plugins:[]
+             plugins:[],
+             api: {
+                  path: '/api/'
+             }
          };
 
          //load old config
