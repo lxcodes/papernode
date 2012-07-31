@@ -162,7 +162,14 @@ function setup( argv ){
              plugins:[],
              api: {
                   path: '/api/'
-             }
+             },
+	     db: {
+	     	 host: 'localhost',
+		 port: 27017,
+		 user: null,
+		 pass: null,
+		 name: 'papernode'
+	     }
          };
 
          //load old config
@@ -170,13 +177,19 @@ function setup( argv ){
              console.log( 'config.json Exists, Reconfiguring'.yellow );
              var oldConfig = require(projectDir+'/config.json');
              for( var key in oldConfig ){
-                  config[key] = oldCOnfig[key];
+                  config[key] = oldConfig[key];
              }
          }
          
 
          var nameQuestion = 'Project Name' + ((config.name)?' ('+config.name+')':'') + ':';
          var portQuestion = 'Port' + ((config.port)?' ('+config.port+')':'') + ':';
+	 var dbHostQuestion = 'DB Host' + ((config.db.host)?' ('+config.db.host+')':'') + ':';
+	 var dbPortQuestion = 'DB Port' + ((config.db.port)?' ('+config.db.port+')':'') + ':';
+	 var dbNameQuestion = 'DB Name' + ((config.db.name)?' ('+config.db.name+')':'') + ':';
+	 var dbUserQuestion = 'DB User' + ((config.db.user)?' ('+config.db.user+')':'') + ':';
+	 var dbPassQuestion = 'DB Pass' + ((config.db.pass)?' ('+config.db.pass+')':'') + ':';
+
 
          //project name
          rl.question( nameQuestion.yellow, function(name){
@@ -185,11 +198,37 @@ function setup( argv ){
              //project port
              rl.question( portQuestion.yellow, function(port){
                  config.port = (port)?parseInt(port):config.port;
+
+		 //db host
+		 rl.question( dbHostQuestion.yellow, function(host){
+		     config.db.host = (host)?host:config.db.host;;
+
+		     //db port
+		     rl.question( dbPortQuestion.yellow, function(port){
+		         config.db.port = (port)?parseInt(port):config.db.port;
+
+			 //db name
+			 rl.question( dbNameQuestion.yellow, function(name){
+			     config.db.name = (name)?name:config.db.name;
+
+			     //db user
+			     rl.question( dbUserQuestion.yellow, function(user){
+			         config.db.user = (user)?user:config.db.user;
+
+				 //db pass
+				 rl.question( dbPassQuestion.yellow, function(pass){
+				     config.db.pass = (pass)?pass:config.db.pass;
+
+				     //write final config to file
+                 		     fs.writeFileSync(projectDir+'/config.json', JSON.stringify(config), 'utf8');
+                 		     console.log( 'Project Configured Properly'.green );
+                 		     process.exit();
+				 });
+			     });
+			 });
+		     });
+		 });
                  
-                 //write final config to file
-                 fs.writeFileSync(projectDir+'/config.json', JSON.stringify(config), 'utf8');
-                 console.log( 'Project Configured Properly'.green );
-                 process.exit();
              });
          });
 }
