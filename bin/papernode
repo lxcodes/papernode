@@ -69,7 +69,7 @@ function init( argv ){
                process.exit(1);
              }
 
-             createProject();
+             createProject(outputDir);
          }else {
                console.log( ('Directory: ' + outputDir + ' Already Exists').yellow );
                rl.question( 'Use Anyways? [y/n]: ', answer);
@@ -78,7 +78,7 @@ function init( argv ){
          function answer(ans){
                   switch(ans[0].toLowerCase()){
                         case 'y':
-                             createProject();
+                             createProject(outputDir);
                              break;
                         case 'n':
                              process.exit();
@@ -94,8 +94,30 @@ function init( argv ){
 
 }
 
-function createProject(){
+function createProject(dir){
     //create required directories/files
+    console.log( 'Creating Project Directories:'.yellow );
+    try{
+        mkdirp.sync(dir+'/interfaces');
+        console.log( '\tinterfaces/'.green );
+
+        mkdirp.sync(dir+'/plugins');
+        console.log( '\tplugins/'.green );
+        
+        mkdirp.sync(dir+'/public/css');
+        console.log( '\tpublic/css/'.green );
+
+        mkdirp.sync(dir+'/public/js');
+        console.log( '\tpublic/js/'.green );
+
+        mkdirp.sync(dir+'/public/img');
+        console.log( '\tpublic/img/'.green );
+    }catch(e){
+        console.err( 'Could Not Create Project Directories'.red );
+        process.exit(1);
+    }
+
+
     console.log( ('Project Initialized Successfully').green );
 
     //we need to configure the project
@@ -126,6 +148,7 @@ function setup( argv ){
          if( argv._.length > 0 ){
              projectDir = argv._[0];
          }
+         projectDir = fs.realpathSync(projectDir);
 
          console.log( ('Using Project Directory: ' + projectDir).yellow );
          if( !fs.existsSync(projectDir) ){
@@ -133,9 +156,81 @@ function setup( argv ){
              process.exit(1);
          }
 
-         //validate directory for project
+         var config = {
+             port: 8080,
+             interfaces:[],
+             plugins:[],
+             api: {
+                  path: '/api/'
+             },
+	     db: {
+	     	 host: 'localhost',
+		 port: 27017,
+		 user: null,
+		 pass: null,
+		 name: 'papernode'
+	     }
+         };
 
-         process.exit();
+         //load old config
+         if( fs.existsSync(projectDir+'/config.json') ){
+             console.log( 'config.json Exists, Reconfiguring'.yellow );
+             var oldConfig = require(projectDir+'/config.json');
+             for( var key in oldConfig ){
+                  config[key] = oldConfig[key];
+             }
+         }
+         
+
+         var nameQuestion = 'Project Name' + ((config.name)?' ('+config.name+')':'') + ':';
+         var portQuestion = 'Port' + ((config.port)?' ('+config.port+')':'') + ':';
+	 var dbHostQuestion = 'DB Host' + ((config.db.host)?' ('+config.db.host+')':'') + ':';
+	 var dbPortQuestion = 'DB Port' + ((config.db.port)?' ('+config.db.port+')':'') + ':';
+	 var dbNameQuestion = 'DB Name' + ((config.db.name)?' ('+config.db.name+')':'') + ':';
+	 var dbUserQuestion = 'DB User' + ((config.db.user)?' ('+config.db.user+')':'') + ':';
+	 var dbPassQuestion = 'DB Pass' + ((config.db.pass)?' ('+config.db.pass+')':'') + ':';
+
+
+         //project name
+         rl.question( nameQuestion.yellow, function(name){
+             config.name = (name)?name:config.name;
+
+             //project port
+             rl.question( portQuestion.yellow, function(port){
+                 config.port = (port)?parseInt(port):config.port;
+
+		 //db host
+		 rl.question( dbHostQuestion.yellow, function(host){
+		     config.db.host = (host)?host:config.db.host;;
+
+		     //db port
+		     rl.question( dbPortQuestion.yellow, function(port){
+		         config.db.port = (port)?parseInt(port):config.db.port;
+
+			 //db name
+			 rl.question( dbNameQuestion.yellow, function(name){
+			     config.db.name = (name)?name:config.db.name;
+
+			     //db user
+			     rl.question( dbUserQuestion.yellow, function(user){
+			         config.db.user = (user)?user:config.db.user;
+
+				 //db pass
+				 rl.question( dbPassQuestion.yellow, function(pass){
+				     config.db.pass = (pass)?pass:config.db.pass;
+
+				     //write final config to file
+                 		     fs.writeFileSync(projectDir+'/config.json', JSON.stringify(config), 'utf8');
+                 		     console.log( 'Project Configured Properly'.green );
+                 		     process.exit();
+				 });
+			     });
+			 });
+		     });
+		 });
+                 
+             });
+         });
 }
 
 function setupHelp(){
@@ -155,7 +250,43 @@ function run( argv ){
              process.exit();
          }
 
-         process.exit();
+	 var papernode = null;
+
+         //try to load papernode module
+	 try{
+		papernode = require('papernode');
+	 }catch(e){
+		console.error( 'Cannot Load Module "papernode"'.red );
+		process.exit(1);
+	 }
+	 if( papernode === null ){
+	     console.error( 'Cannot Load MOdule "papernode"'.red );
+	     process.exit(1);
+	 }
+
+         //determine project directory
+	 var projectDir = './';
+	 if( argv._[0] ){
+	     projectDir = argv._[0];
+	 }
+         projectDir = fs.realpathSync(projectDir);
+
+         //load options from config.json
+         var options = {};
+         if( fs.existsSync(projectDir+'/config.json') ){
+             options = require(projectDir+'/config.json');
+         }
+
+         //override options from cli
+         options.port = (argv.port)?parseInt(argv.port):options.port;
+
+         //force this project directory
+         options.dir = projectDir;
+
+         
+         //create the server and lets get going!
+	 var server = papernode.createServer( options );
+         server.start();
 }
 
 function runHelp(){
@@ -163,8 +294,8 @@ function runHelp(){
          console.log( 'Usage:'.yellow );
          console.log( '\tpapernode run <project directory>' );
          console.log( 'Options:'.yellow );
-         console.log( '\t--help\t- display this text' );
-         console.log( '\t--daemon\t- run project as a daemon' );
+         console.log( '\t--help\t\t- display this text' );
+	 console.log( '\t--port=8080\t- port number to listen on (default:8080)' );
          console.log( 'Example:'.yellow );
          console.log( '\tpapernode run' );
          console.log( '\tpapernode run /my/project/dir' );

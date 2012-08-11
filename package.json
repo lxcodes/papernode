@@ -23,13 +23,19 @@
   },
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha --spec reporter"
+    "test": "node_modules/.bin/mocha --reporter spec ./test",
+    "start": "papernode run"
+  },
+  "bin": {
+    "papernode": "bin/papernode"
   },
   "dependencies": {
-    "mocha": "*",
+    "mocha": ">=1.3.0",
     "optimist": ">=0.3.4",
     "mkdirp": ">=0.3.3",
-    "colors": ">=0.6.0"
+    "colors": ">=0.6.0",
+    "express": ">=3.0.0rc1",
+    "connect": ">=2.4.2"
   },
   "devDependencies": {},
   "optionalDependencies": {},
