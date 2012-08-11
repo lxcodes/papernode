@@ -23,7 +23,7 @@
   },
   "main": "lib/index.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha --spec reporter ./test",
+    "test": "node_modules/.bin/mocha --reporter spec ./test",
     "start": "papernode run"
   },
   "bin": {
