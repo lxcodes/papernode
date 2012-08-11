@@ -11,5 +11,5 @@ describe('API', function(){
 
 		assert.ok( path[0]==='/', 'api path does not start with a slash' );
 		assert.ok( path[path.length-1]==='/', 'api path does not end with a slash' );
-	    });
-    });
+	});
+});
